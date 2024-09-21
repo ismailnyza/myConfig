@@ -1,0 +1,102 @@
+---
+- hosts: localhost
+  become: true
+  tasks:
+    # Install required packages
+    - name: Install required packages
+      apt:
+        name:
+          - i3
+          - zsh
+          - curl
+          - git
+          - feh
+          - autoconf
+          - build-essential
+          - libtool
+          - python3-pip
+          - xclip
+          - xsettingsd
+          - default-jre
+          - openjdk-17-jdk
+          - fzf
+          - ripgrep
+          - neovim
+          - alacritty
+          - clipit
+          - nm-applet
+          - spotify
+          - vlc
+          - chrome-browser
+          - tmux
+          - htop
+          - nodejs
+          - python3
+          - docker.io
+          - postman
+          - intellij-idea
+        state: present
+
+    # Clone the Ansible script from GitHub
+    - name: Clone Ansible script from GitHub
+      git:
+        repo: https://github.com/your-username/your-ansible-repo.git
+        dest: ~/ansible-scripts
+
+    # Install oh-my-zsh
+    - name: Clone oh-my-zsh
+      git:
+        repo: https://github.com/ohmyzsh/ohmyzsh.git
+        dest: ~/.oh-my-zsh
+
+    # Change default shell to zsh
+    - name: Change default shell to zsh
+      lineinfile:
+        path: /etc/passwd
+        regexp: '^ismailN:.*'
+        replace: '^ismailN:.*:(.*):/bin/bash$'
+        with: '^ismailN:.*:\1:/bin/zsh'
+        state: present
+
+    # Install plugins for zsh
+    - name: Install plugins for zsh
+      shell: |
+        chsh -s /bin/zsh
+        sh ~/.oh-my-zsh/tools/install.sh --unattended --shell zsh --cache-dir ~/.cache/oh-my-zsh
+        git clone https://github.com/zsh-users/zsh-autosuggestions ~/.zsh-autosuggestions
+        echo "source ~/.zsh-autosuggestions/zsh-autosuggestions.zsh" >> ~/.zshrc
+
+        # Add Ayu theme to oh-my-zsh
+        git clone https://github.com/ohmyzsh/theme-ayu.git ~/.oh-my-zsh/custom/themes/ayu
+        echo "ZSH_THEME=ayu" >> ~/.zshrc
+
+    # Install nvim plugins
+    - name: Install nvim plugins with Plug
+      shell: |
+        sh -c 'curl -fLo ~/.config/nvim/autoload/plug.vim https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+        sh -c 'nvim +PlugInstall +qall'
+
+    # Configure i3
+    - name: Copy i3 config file
+      copy:
+        content: "{{ lookup('file', 'i3_config.txt') }}"
+        dest: ~/.config/i3/config
+        mode: 0644
+
+    # Configure nvim
+    - name: Copy nvim config file
+      copy:
+        content: "{{ lookup('file', 'nvim_config.txt') }}"
+        dest: ~/.config/nvim/init.vim
+        mode: 0644
+
+    # Download sample i3 config
+    - name: Download sample i3 config
+      get_url:
+        url: https://raw.githubusercontent.com/sgolem/i3wm-config/master/i3_config
+        dest: i3_config.txt
+
+    # Download sample nvim config
+      get_url:
+        url: https://raw.githubusercontent.com/LunarVim/LunarVim/master/nvim/init.lua
+        dest: nvim_config.txt
