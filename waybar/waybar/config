@@ -1,0 +1,169 @@
+{
+    //--------------------------------------------------------------------------
+    // Global Waybar Configuration
+    //--------------------------------------------------------------------------
+    "layer": "top",
+    "position": "top",
+    "height": 32,
+    "spacing": 4,
+    "fixed-center": true,
+    "reload_style_on_change": true,
+
+    //--------------------------------------------------------------------------
+    // Modules Left
+    //--------------------------------------------------------------------------
+    "modules-left": [
+       // "custom/launcher",
+        "hyprland/workspaces"
+    ],
+
+    //--------------------------------------------------------------------------
+    // Modules Center
+    //--------------------------------------------------------------------------
+    "modules-center": [
+        //"hyprland/window", 
+        "clock"        // <<-- CLOCK MOVED HERE
+    ],
+
+    //--------------------------------------------------------------------------
+    // Modules Right
+    //--------------------------------------------------------------------------
+    "modules-right": [
+        "tray",
+        "custom/weather",
+        // "custom/vpn",
+        "network",
+        "pulseaudio",
+        // "backlight",
+        "battery",
+        "custom/notification",
+        // "clock", // <<-- CLOCK REMOVED FROM HERE
+        "custom/power"
+    ],
+
+    //--------------------------------------------------------------------------
+    // Module Specific Configurations (Only showing relevant parts for brevity)
+    //--------------------------------------------------------------------------
+
+    // -- Launcher --
+    "custom/launcher": {
+        "format": "󰣇",
+        "tooltip": "Open Application Launcher",
+        "on-click": "rofi -show drun -theme catppuccin-mocha" // Adjusted Rofi theme call
+    },
+
+    // -- Workspaces (Sway/Hyprland) --
+    "sway/workspaces": {
+        "disable-scroll": true,
+        "all-outputs": true,
+        "format": "{icon}",
+        "format-icons": {
+            "1": "󰎦", "2": "󰎩", "3": "󰎬", "4": "󰎮", "5": "󰎰",
+            "urgent": "󰎵", "focused": "󰎣", "default": "󰎠"
+        }
+    },
+
+    // -- Window Title (Sway/Hyprland) --
+    "sway/window": {
+        "format": "{}",
+        "max-length": 50,
+        "rewrite": {
+            "(.*) - VIM": " Vim: $1",
+            "(.*) - Visual Studio Code": "󰨞 VSCode: $1",
+            "(.*)Mozilla Firefox": "󰈹 Firefox: $1"
+        }
+    },
+
+    // -- Tray --
+    "tray": {
+        "icon-size": 16,
+        "spacing": 8
+        // If you want to aggressively hide everything *except* specific items,
+        // you might need to look into your tray app's settings or use a more
+        // advanced tray manager that Waybar can interface with, or simply
+        // prevent unwanted apps from creating tray icons at their source.
+        // Example: "passthrough": false, "reverse-direction": false,
+        // "bindings": { "on-secondary-click": "activate", "on-scroll-up": "next", "on-scroll-down": "previous" }
+    },
+
+    // -- Custom Weather --
+    "custom/weather": {
+        "format": "{} {}", "tooltip": true, "interval": 1800,
+        "exec": "~/.config/waybar/scripts/weather.sh YOUR_CITY",
+        "return-type": "json",
+        "on-click": "xdg-open https://wttr.in/YOUR_CITY"
+    },
+
+    // -- Custom VPN --
+    "custom/vpn": {
+        "format": "{} {}", "interval": 5,
+        "exec": "~/.config/waybar/scripts/vpn_status.sh",
+        "return-type": "json",
+        "on-click": "~/.config/waybar/scripts/toggle_vpn.sh"
+    },
+
+    // -- Network --
+    "network": {
+        "format-wifi": "󰖩 {essid} ({signalStrength}%)",
+        "format-ethernet": "󰈀 Connected",
+        "format-disconnected": "󰖪 Disconnected",
+        "tooltip-format": "{ifname} via {gwaddr}  IP: {ipaddr}/{cidr}",
+        "on-click": "~/.config/waybar/scripts/wifi-menu.sh"
+    },
+
+    // -- Audio (Pulseaudio/PipeWire) --
+    "pulseaudio": {
+        "format": "{icon} {volume}% {format_source}",
+        "format-bluetooth": "{icon} {volume}% {format_source}",
+        "format-bluetooth-muted": "󰖁 {format_source}",
+        "format-muted": "󰖁 {format_source}",
+        "format-source": " {volume}%",
+        "format-source-muted": "",
+        "format-icons": {
+            "headphone": "󰋋", "hands-free": "󰋎", "headset": "󰋎",
+            "phone": "󰏲", "portable": "󰦙", "car": "󰄋",
+            "default": ["", "", ""]
+        },
+        "scroll-step": 5, "on-click": "pavucontrol",
+        "on-click-right": "~/.config/waybar/scripts/rofi_bluetoothmenu.sh"
+    },
+
+    // -- Backlight (Brightness) --
+    "backlight": {
+        "format": "{icon} {percent}%",
+        "format-icons": ["󰃚", "󰃛", "󰃜"],
+        "on-scroll-up": "brightnessctl set 5%+", "on-scroll-down": "brightnessctl set 5%-",
+        "tooltip": true
+    },
+
+    // -- Battery --
+    "battery": {
+        "states": { "warning": 30, "critical": 15 },
+        "format": "{icon} {capacity}%", "format-charging": "Charging {capacity}%",
+        "format-plugged": "󰚥 Plugged {capacity}%", "format-alt": "{time} {icon}",
+        "format-icons": ["󰂎", "󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"]
+    },
+
+    // -- Custom Notification (using Dunst) --
+    "custom/notification": {
+        "format": "{} {}", "interval": 2,
+        "exec": "~/.config/waybar/scripts/notification_daemon_check.sh",
+        "return-type": "json",
+        "on-click": "dunstctl history-pop", "on-click-right": "dunstctl close-all"
+    },
+
+    // -- Clock -- (Now in modules-center)
+    "clock": {
+        // Using %I for 12-hour format (01-12) and %p for AM/PM
+        "format": "󰥔 {:%A, %d %b %I:%M %p}",
+        "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
+        // You might want to update format-alt as well if you use it
+        "format-alt": "󰃭 {:%I:%M:%S %p}"
+    },
+
+    // -- Custom Power Menu --
+    "custom/power": {
+        "format": "", "tooltip": "Power Menu",
+        "on-click": "~/.config/waybar/scripts/rofi_powermenu.sh"
+    }
+}

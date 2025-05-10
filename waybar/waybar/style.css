@@ -1,0 +1,213 @@
+/*
+* Catppuccin Mocha Theme for Waybar
+* https://github.com/catppuccin/catppuccin
+*/
+
+/* Reset all styles */
+* {
+    border: none;
+    border-radius: 0;
+    min-height: 0;
+    font-family: "JetBrainsMono Nerd Font", "Font Awesome 6 Free", monospace;
+    font-size: 13px;
+    font-weight: normal;
+    padding: 0;
+    margin: 0;
+}
+
+/* Catppuccin Mocha Palette */
+@define-color rosewater #f5e0dc;
+@define-color flamingo #f2cdcd;
+@define-color pink #f5c2e7;
+@define-color mauve #cba6f7; /* Accent, Active */
+@define-color red #f38ba8; /* Critical */
+@define-color maroon #eba0ac;
+@define-color peach #fab387; /* Warning */
+@define-color yellow #f9e2af;
+@define-color green #a6e3a1; /* Success, Connected */
+@define-color teal #94e2d5;
+@define-color sky #89dceb;
+@define-color sapphire #74c7ec;
+@define-color blue #89b4fa; /* Info */
+@define-color lavender #b4befe;
+
+@define-color text #cdd6f4;
+@define-color subtext1 #bac2de;
+@define-color subtext0 #a6adc8;
+@define-color overlay2 #9399b2; /* Hover background */
+@define-color overlay1 #7f849c;
+@define-color overlay0 #6c7086;
+@define-color surface2 #585b70;
+@define-color surface1 #45475a; /* Module background */
+@define-color surface0 #313244;
+@define-color base #1e1e2e;   /* Bar background slightly lighter */
+@define-color mantle #181825; /* Bar background */
+@define-color crust #11111b;
+
+window#waybar {
+    background-color: @mantle;
+    color: @text;
+    transition-property: background-color;
+    transition-duration: .5s;
+    border-bottom: 2px solid @surface0; /* Subtle border */
+}
+
+/* Module Common Styles */
+#workspaces button,
+#clock,
+#battery,
+#pulseaudio,
+#network,
+#backlight,
+#tray,
+#custom-launcher,
+#custom-weather,
+#custom-vpn,
+#custom-notification,
+#custom-power,
+#sway-window, /* Add hyprland-window if you use it */
+#hyprland-window {
+    background-color: @surface1;
+    color: @text;
+    padding: 0 10px;
+    margin: 4px 3px; /* Vertical margin for spacing from bar edge, horizontal for spacing between modules */
+    border-radius: 8px; /* Rounded corners for modules */
+    transition: all 0.3s ease-in-out;
+}
+
+/* Hover Effect for Modules */
+#workspaces button:hover,
+#clock:hover,
+#battery:hover,
+#pulseaudio:hover,
+#network:hover,
+#backlight:hover,
+#tray:hover,
+#custom-launcher:hover,
+#custom-weather:hover,
+#custom-vpn:hover,
+#custom-notification:hover,
+#custom-power:hover {
+    background-color: @overlay2;
+    color: @crust; /* Darker text on hover for contrast */
+}
+
+/* Workspaces */
+#workspaces button {
+    padding: 0 8px;
+    background-color: transparent; /* Make non-active workspaces less prominent */
+    color: @subtext0;
+    border: 2px solid transparent; /* For consistent size */
+}
+
+#workspaces button.focused {
+    background-color: @mauve;
+    color: @crust; /* Dark text on active accent */
+    border: 2px solid @mauve;
+}
+
+#workspaces button.active { /* For Hyprland */
+    background-color: @mauve;
+    color: @crust;
+    border: 2px solid @mauve;
+}
+
+#workspaces button.urgent {
+    background-color: @red;
+    color: @crust;
+    border: 2px solid @red;
+}
+
+/* Window Title */
+#sway-window,
+#hyprland-window {
+    background-color: transparent; /* Usually want this to blend more */
+    font-weight: bold;
+    color: @subtext1;
+    padding: 0 15px; /* Give it some breathing room */
+}
+
+/* Clock */
+#clock {
+    background-color: @surface0; /* Slightly different for emphasis */
+    color: @sky;
+    font-weight: bold;
+}
+
+/* Battery */
+#battery.charging,
+#battery.plugged {
+    color: @green;
+}
+#battery.warning {
+    color: @peach;
+}
+#battery.critical {
+    color: @red;
+    animation: blink 1s linear infinite alternate;
+}
+
+/* Network */
+#network.disconnected {
+    color: @red;
+}
+#network.wifi, #network.ethernet {
+    color: @green;
+}
+#custom-vpn.vpn-on {
+  color: @green;
+}
+#custom-vpn.vpn-off {
+  color: @peach;
+}
+
+
+/* Audio */
+#pulseaudio {
+    color: @lavender;
+}
+#pulseaudio.muted {
+    color: @peach;
+}
+
+/* Backlight */
+#backlight {
+    color: @yellow;
+}
+
+/* Custom Notification */
+#custom-notification.has-notifications {
+    color: @pink;
+}
+#custom-notification.no-notifications {
+    color: @subtext0;
+}
+
+
+/* Power Menu & Launcher */
+#custom-power,
+#custom-launcher {
+    color: @mauve;
+    font-size: 16px; /* Slightly larger icons */
+}
+#custom-launcher {
+    color: @sky;
+}
+
+
+/* Tray */
+#tray > .passive {
+    -gtk-icon-effect: dim;
+}
+#tray > .needs-attention {
+    -gtk-icon-effect: highlight;
+    background-color: @peach;
+}
+
+/* Blinking Animation */
+@keyframes blink {
+    to {
+        color: @crust;
+        background-color: @red;
+    }
+}
