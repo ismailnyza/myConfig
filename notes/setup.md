@@ -10,109 +10,79 @@ sudo apt install -y \
   i3 i3status rofi dunst alacritty neovim \
   feh xclip playerctl brightnessctl scrot thunar \
   network-manager-gnome pavucontrol i3lock \
-  fonts-jetbrains-mono
+  fonts-jetbrains-mono \
+  ripgrep fd-find unzip curl git libnotify-bin xss-lock xdg-utils \
+  zsh fzf lua5.4 luarocks shellcheck golang-go nodejs npm
 ```
 
-## Optional but useful
+## Oh My Zsh + plugins
 
 ```bash
-sudo apt install -y ripgrep fd-find unzip curl git libnotify-bin xss-lock xdg-utils
+./scripts/install-zsh.sh
 ```
+
+This sets up:
+- Oh My Zsh
+- autocompletion
+- autosuggestions
+- syntax highlighting
+- history substring search
+- Neovim as default editor
 
 ## Config placement
 
 ```bash
-mkdir -p ~/.config/i3 ~/.config/i3status ~/.config/rofi ~/.config/dunst ~/.config/alacritty ~/.config/nvim
-cp i3/config ~/.config/i3/config
-cp i3status/config ~/.config/i3status/config
-cp rofi/config.rasi ~/.config/rofi/config.rasi
-cp dunst/dunstrc ~/.config/dunst/dunstrc
-cp alacritty/alacritty.toml ~/.config/alacritty/alacritty.toml
-cp nvim/init.lua ~/.config/nvim/init.lua
+./scripts/apply-config.sh
 ```
 
-## Wallpaper
+## Neovim bootstrap
 
-Put your wallpaper at:
+Open Neovim once:
 
 ```bash
-~/Pictures/wallpaper.png
+nvim
 ```
 
-## First login checks
+Then let Lazy/Mason install plugins and language tools.
 
-- `i3-msg reload`
-- `i3-msg restart`
-- open `alacritty`
-- run `nvim`
-- run `:Lazy sync`
-- verify `rofi -show drun`
-- verify notifications with `notify-send test hello`
+Useful first commands:
 
-## Notes
+```vim
+:Lazy sync
+:Mason
+:checkhealth
+```
 
-- Start with `i3status`, not Polybar.
-- Keep the bar minimal.
-- Add extra tools only when they solve a real problem.
+## Language support included
 
-## Final choices in this setup
+### Go
+- `gopls`
+- `goimports`
+- `gofumpt`
+- Treesitter
+- formatting on save
+- LSP navigation / hover / rename / code actions
 
-- No Hyprland
-- No Waybar
-- No picom by default
-- Keep `nm-applet` for practical network control
-- Skip `pasystray` to reduce tray clutter
-- Use `i3status` first, not Polybar
+### JavaScript / TypeScript
+- `typescript-language-server`
+- `prettier`
+- `eslint-lsp`
+- Treesitter for JS/TS/TSX
+- formatting on save
+- LSP suggestions and navigation
 
-## Recommended personal-use extras
-
-These are not mandatory, but they make the setup feel complete for daily use:
+## Recommended flow on Jarvis
 
 ```bash
-sudo apt install -y brave-browser
+git clone https://github.com/ismailnyza/myConfig ~/myConfig
+cd ~/myConfig
+./scripts/install-dev.sh
+./scripts/install-zsh.sh
+./scripts/apply-config.sh
+exec zsh
+nvim
 ```
 
-If you use a different browser, update `$browser` in `i3/config`.
+## Optional Telegram note
 
-## Lock screen
-
-This config binds lock to:
-
-```bash
-Super+Shift+L
-```
-
-Make sure `i3lock` is installed.
-
-## Screenshots
-
-Screenshots are saved to:
-
-```bash
-~/Pictures/screenshots
-```
-
-- `Print` → full screenshot
-- `Super+Print` → selection screenshot
-
-## First-login personal tweaks
-
-After copying the config, check these quickly:
-
-- browser command in `i3/config`
-- wallpaper path (`~/Pictures/wallpaper.png`)
-- audio keys work with PipeWire/PulseAudio
-- brightness keys work on your laptop
-- `Super+Shift+L` locks correctly
-
-## Fonts
-
-Default setup uses:
-
-```bash
-fonts-jetbrains-mono
-```
-
-That works cleanly with Ubuntu package repos.
-
-If you want Nerd Font glyphs later, install a Nerd Font manually and then change the font names in the config files.
+If you want Telegram integrations inside Neovim later, that is a separate layer from editor/LSP setup. This repo currently focuses on shell, terminal, and coding workflow.

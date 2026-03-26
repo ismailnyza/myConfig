@@ -2,7 +2,8 @@ vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
-if not vim.uv.fs_stat(lazypath) then
+local uv = vim.uv or vim.loop
+if not uv.fs_stat(lazypath) then
   vim.fn.system({
     "git",
     "clone",
@@ -20,8 +21,8 @@ vim.opt.scrolloff = 8
 vim.opt.termguicolors = true
 vim.opt.signcolumn = "yes"
 vim.opt.clipboard = "unnamedplus"
-vim.opt.tabstop = 4
-vim.opt.shiftwidth = 4
+vim.opt.tabstop = 2
+vim.opt.shiftwidth = 2
 vim.opt.expandtab = true
 vim.opt.smartindent = true
 vim.opt.ignorecase = true
@@ -31,23 +32,21 @@ vim.opt.swapfile = false
 vim.opt.backup = false
 vim.opt.writebackup = false
 vim.opt.mouse = "a"
-vim.opt.updatetime = 250
+vim.opt.updatetime = 200
 vim.opt.splitright = true
 vim.opt.splitbelow = true
 vim.opt.completeopt = { "menu", "menuone", "noselect" }
+vim.opt.cursorline = true
+vim.opt.pumheight = 12
 
 vim.keymap.set("n", "<leader>ff", "<cmd>Telescope find_files<CR>", { desc = "Find files" })
 vim.keymap.set("n", "<leader>fg", "<cmd>Telescope live_grep<CR>", { desc = "Live grep" })
 vim.keymap.set("n", "<leader>fb", "<cmd>Telescope buffers<CR>", { desc = "Buffers" })
+vim.keymap.set("n", "<leader>fh", "<cmd>Telescope help_tags<CR>", { desc = "Help tags" })
 vim.keymap.set("n", "<leader>e", "<cmd>Oil<CR>", { desc = "File explorer" })
 vim.keymap.set("n", "<leader>w", "<cmd>w<CR>", { desc = "Write" })
 vim.keymap.set("n", "<leader>q", "<cmd>q<CR>", { desc = "Quit" })
 vim.keymap.set("n", "<leader>h", "<cmd>nohlsearch<CR>", { desc = "Clear search highlight" })
-vim.keymap.set("n", "gd", vim.lsp.buf.definition, { desc = "Go to definition" })
-vim.keymap.set("n", "gr", vim.lsp.buf.references, { desc = "References" })
-vim.keymap.set("n", "K", vim.lsp.buf.hover, { desc = "Hover" })
-vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, { desc = "Rename" })
-vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, { desc = "Code action" })
 
 require("lazy").setup({
   {
@@ -81,7 +80,7 @@ require("lazy").setup({
     build = ":TSUpdate",
     config = function()
       require("nvim-treesitter.configs").setup({
-        ensure_installed = { "go", "lua", "vim", "bash", "markdown" },
+        ensure_installed = { "go", "gomod", "gosum", "lua", "vim", "bash", "markdown", "javascript", "typescript", "tsx", "json", "html", "css" },
         highlight = { enable = true },
         indent = { enable = true },
       })
@@ -98,7 +97,34 @@ require("lazy").setup({
     dependencies = { "williamboman/mason.nvim", "neovim/nvim-lspconfig" },
     config = function()
       require("mason-lspconfig").setup({
-        ensure_installed = { "gopls", "lua_ls", "bashls" },
+        ensure_installed = { "gopls", "lua_ls", "bashls", "ts_ls", "jsonls", "html", "cssls" },
+      })
+    end,
+  },
+  {
+    "WhoIsSethDaniel/mason-tool-installer.nvim",
+    dependencies = { "williamboman/mason.nvim" },
+    config = function()
+      require("mason-tool-installer").setup({
+        ensure_installed = {
+          "gopls",
+          "goimports",
+          "gofumpt",
+          "golangci-lint",
+          "lua-language-server",
+          "stylua",
+          "bash-language-server",
+          "shellcheck",
+          "typescript-language-server",
+          "js-debug-adapter",
+          "prettier",
+          "eslint-lsp",
+          "json-lsp",
+          "html-lsp",
+          "css-lsp",
+        },
+        auto_update = false,
+        run_on_start = true,
       })
     end,
   },
@@ -109,10 +135,37 @@ require("lazy").setup({
       local capabilities = require("cmp_nvim_lsp").default_capabilities()
       local lspconfig = require("lspconfig")
 
-      lspconfig.gopls.setup({ capabilities = capabilities })
-      lspconfig.bashls.setup({ capabilities = capabilities })
+      local on_attach = function(_, bufnr)
+        local opts = { buffer = bufnr }
+        vim.keymap.set("n", "gd", vim.lsp.buf.definition, vim.tbl_extend("force", opts, { desc = "Go to definition" }))
+        vim.keymap.set("n", "gr", vim.lsp.buf.references, vim.tbl_extend("force", opts, { desc = "References" }))
+        vim.keymap.set("n", "gi", vim.lsp.buf.implementation, vim.tbl_extend("force", opts, { desc = "Implementation" }))
+        vim.keymap.set("n", "K", vim.lsp.buf.hover, vim.tbl_extend("force", opts, { desc = "Hover" }))
+        vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, vim.tbl_extend("force", opts, { desc = "Rename" }))
+        vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, vim.tbl_extend("force", opts, { desc = "Code action" }))
+        vim.keymap.set("n", "<leader>f", function() vim.lsp.buf.format({ async = false }) end, vim.tbl_extend("force", opts, { desc = "Format" }))
+      end
+
+      lspconfig.gopls.setup({
+        capabilities = capabilities,
+        on_attach = on_attach,
+        settings = {
+          gopls = {
+            gofumpt = true,
+            usePlaceholders = true,
+            staticcheck = true,
+          },
+        },
+      })
+
+      lspconfig.ts_ls.setup({ capabilities = capabilities, on_attach = on_attach })
+      lspconfig.bashls.setup({ capabilities = capabilities, on_attach = on_attach })
+      lspconfig.jsonls.setup({ capabilities = capabilities, on_attach = on_attach })
+      lspconfig.html.setup({ capabilities = capabilities, on_attach = on_attach })
+      lspconfig.cssls.setup({ capabilities = capabilities, on_attach = on_attach })
       lspconfig.lua_ls.setup({
         capabilities = capabilities,
+        on_attach = on_attach,
         settings = {
           Lua = {
             diagnostics = { globals = { "vim" } },
@@ -125,26 +178,51 @@ require("lazy").setup({
     "hrsh7th/nvim-cmp",
     dependencies = {
       "hrsh7th/cmp-nvim-lsp",
+      "hrsh7th/cmp-buffer",
+      "hrsh7th/cmp-path",
       "L3MON4D3/LuaSnip",
       "saadparwaiz1/cmp_luasnip",
+      "rafamadriz/friendly-snippets",
     },
     config = function()
       local cmp = require("cmp")
+      local luasnip = require("luasnip")
+      require("luasnip.loaders.from_vscode").lazy_load()
+
       cmp.setup({
         snippet = {
           expand = function(args)
-            require("luasnip").lsp_expand(args.body)
+            luasnip.lsp_expand(args.body)
           end,
         },
         mapping = cmp.mapping.preset.insert({
           ["<CR>"] = cmp.mapping.confirm({ select = true }),
-          ["<Tab>"] = cmp.mapping.select_next_item(),
-          ["<S-Tab>"] = cmp.mapping.select_prev_item(),
+          ["<Tab>"] = cmp.mapping(function(fallback)
+            if cmp.visible() then
+              cmp.select_next_item()
+            elseif luasnip.expand_or_jumpable() then
+              luasnip.expand_or_jump()
+            else
+              fallback()
+            end
+          end, { "i", "s" }),
+          ["<S-Tab>"] = cmp.mapping(function(fallback)
+            if cmp.visible() then
+              cmp.select_prev_item()
+            elseif luasnip.jumpable(-1) then
+              luasnip.jump(-1)
+            else
+              fallback()
+            end
+          end, { "i", "s" }),
+          ["<C-Space>"] = cmp.mapping.complete(),
         }),
-        sources = {
+        sources = cmp.config.sources({
           { name = "nvim_lsp" },
           { name = "luasnip" },
-        },
+          { name = "path" },
+          { name = "buffer" },
+        }),
       })
     end,
   },
@@ -158,13 +236,15 @@ require("lazy").setup({
           null_ls.builtins.formatting.stylua,
           null_ls.builtins.formatting.gofmt,
           null_ls.builtins.formatting.goimports,
+          null_ls.builtins.formatting.prettier,
+          null_ls.builtins.diagnostics.eslint_d,
         },
       })
 
       vim.api.nvim_create_autocmd("BufWritePre", {
         callback = function(args)
           local ft = vim.bo[args.buf].filetype
-          if ft == "go" or ft == "lua" then
+          if ft == "go" or ft == "lua" or ft == "javascript" or ft == "javascriptreact" or ft == "typescript" or ft == "typescriptreact" or ft == "json" or ft == "css" or ft == "html" then
             vim.lsp.buf.format({ bufnr = args.buf, async = false })
           end
         end,

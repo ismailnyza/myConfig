@@ -8,6 +8,7 @@ A clean, distraction-minimal Ubuntu setup built around:
 - Alacritty
 - Rofi
 - Dunst
+- Zsh + Oh My Zsh
 
 ## Philosophy
 
@@ -26,49 +27,69 @@ Keep the machine calm, fast, and predictable.
 - `rofi/config.rasi` — launcher
 - `dunst/dunstrc` — notifications
 - `alacritty/alacritty.toml` — terminal
+- `zsh/.zshrc` — shell config
 - `nvim/init.lua` — Neovim config
+- `scripts/install-dev.sh` — Ubuntu package install
+- `scripts/install-zsh.sh` — Oh My Zsh + shell extras
+- `scripts/apply-config.sh` — copy configs into `~/.config`
 - `notes/setup.md` — package/install guidance for Ubuntu
 
-## Recommended install targets on Ubuntu
+## Included developer experience
 
-- i3
-- i3status
-- rofi
-- dunst
-- alacritty
-- feh
-- neovim
-- xclip
-- playerctl
-- brightnessctl
+### Shell
+- Oh My Zsh
+- autocomplete
+- autosuggestions
+- syntax highlighting
+- history search
+- sensible aliases
+
+### Neovim
+- Lazy.nvim plugin manager
+- Telescope
+- Oil
+- Treesitter
+- Mason
+- LSP
+- completion/snippets
+- format on save
+
+### Language support
+- Go
+- JavaScript
+- TypeScript
+- Lua
+- Bash
+- JSON
+- HTML
+- CSS
 
 ## Goal
 
 A setup that helps you work, not admire the setup.
 
-## Ready for daily use?
-
-Yes — this repo is meant to be a practical personal-use baseline, not a screenshot-flex rice.
-
-What is intentionally included:
-- sane i3 keybinds
-- rofi app launcher
-- dunst notifications
-- terminal + editor defaults
-- screenshot shortcuts
-- network tray
-- simple status bar
-
-What is intentionally excluded:
-- flashy compositor stack by default
-- bar/widget sprawl
-- unnecessary background helpers
-
-You should still expect tiny personal tweaks after a day or two of use — browser choice, wallpaper, font size, maybe one or two keybinds.
-
-
 ## Ubuntu-friendly defaults
 
-This repo now defaults to plain **JetBrains Mono** instead of a Nerd Font so it works cleanly with stock Ubuntu package repositories.
+This repo defaults to plain **JetBrains Mono** so it works cleanly with stock Ubuntu package repositories.
 
-If you want Nerd Font glyphs later, you can install one manually and swap the font names back.
+If you want Nerd Font glyphs later, install one manually and swap the font names back.
+
+## Quick start
+
+```bash
+git clone https://github.com/ismailnyza/myConfig ~/myConfig
+cd ~/myConfig
+./scripts/install-dev.sh
+./scripts/install-zsh.sh
+./scripts/apply-config.sh
+exec zsh
+nvim
+```
+
+Then inside Neovim run:
+
+```vim
+:Lazy sync
+:Mason
+:checkhealth
+```
