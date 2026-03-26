@@ -39,11 +39,16 @@ vim.opt.completeopt = { "menu", "menuone", "noselect" }
 vim.opt.cursorline = true
 vim.opt.pumheight = 12
 
-vim.keymap.set("n", "<leader>ff", "<cmd>Telescope find_files<CR>", { desc = "Find files" })
-vim.keymap.set("n", "<leader>fg", "<cmd>Telescope live_grep<CR>", { desc = "Live grep" })
-vim.keymap.set("n", "<leader>fb", "<cmd>Telescope buffers<CR>", { desc = "Buffers" })
-vim.keymap.set("n", "<leader>fh", "<cmd>Telescope help_tags<CR>", { desc = "Help tags" })
-vim.keymap.set("n", "<leader>e", "<cmd>Oil<CR>", { desc = "File explorer" })
+local builtin = require("telescope.builtin")
+vim.keymap.set("n", "<leader>n", "<cmd>Oil<CR>", { desc = "Project file explorer" })
+vim.keymap.set("n", "<leader>ff", function()
+  builtin.find_files({ hidden = true, previewer = true })
+end, { desc = "Find files" })
+vim.keymap.set("n", "<leader>fg", function()
+  builtin.live_grep({ previewer = true })
+end, { desc = "Live grep" })
+vim.keymap.set("n", "<leader>fb", builtin.buffers, { desc = "Buffers" })
+vim.keymap.set("n", "<leader>fh", builtin.help_tags, { desc = "Help tags" })
 vim.keymap.set("n", "<leader>w", "<cmd>w<CR>", { desc = "Write" })
 vim.keymap.set("n", "<leader>q", "<cmd>q<CR>", { desc = "Quit" })
 vim.keymap.set("n", "<leader>h", "<cmd>nohlsearch<CR>", { desc = "Clear search highlight" })
@@ -63,7 +68,30 @@ require("lazy").setup({
       require("telescope").setup({
         defaults = {
           sorting_strategy = "ascending",
-          layout_config = { prompt_position = "top" },
+          layout_strategy = "horizontal",
+          layout_config = {
+            prompt_position = "top",
+            preview_width = 0.55,
+            width = 0.95,
+            height = 0.9,
+          },
+          path_display = { "smart" },
+          preview = {
+            treesitter = true,
+          },
+        },
+        pickers = {
+          find_files = {
+            hidden = true,
+          },
+          live_grep = {
+            additional_args = function()
+              return { "--hidden" }
+            end,
+          },
+          lsp_references = {
+            show_line = false,
+          },
         },
       })
     end,
@@ -152,6 +180,11 @@ require("lazy").setup({
         vim.keymap.set("n", "gr", vim.lsp.buf.references, vim.tbl_extend("force", opts, { desc = "References" }))
         vim.keymap.set("n", "gi", vim.lsp.buf.implementation, vim.tbl_extend("force", opts, { desc = "Implementation" }))
         vim.keymap.set("n", "K", vim.lsp.buf.hover, vim.tbl_extend("force", opts, { desc = "Hover" }))
+        vim.keymap.set("n", "<leader>gd", vim.lsp.buf.definition, vim.tbl_extend("force", opts, { desc = "Go to definition" }))
+        vim.keymap.set("n", "<leader>gi", vim.lsp.buf.implementation, vim.tbl_extend("force", opts, { desc = "Go to implementation" }))
+        vim.keymap.set("n", "<leader>gu", function()
+          builtin.lsp_references({ include_current_line = false, show_line = false })
+        end, vim.tbl_extend("force", opts, { desc = "Usages" }))
         vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, vim.tbl_extend("force", opts, { desc = "Rename" }))
         vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, vim.tbl_extend("force", opts, { desc = "Code action" }))
         vim.keymap.set("n", "<leader>f", function() vim.lsp.buf.format({ async = false }) end, vim.tbl_extend("force", opts, { desc = "Format" }))
