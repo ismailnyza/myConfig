@@ -65,3 +65,10 @@ What is intentionally excluded:
 - unnecessary background helpers
 
 You should still expect tiny personal tweaks after a day or two of use — browser choice, wallpaper, font size, maybe one or two keybinds.
+
+
+## Ubuntu-friendly defaults
+
+This repo now defaults to plain **JetBrains Mono** instead of a Nerd Font so it works cleanly with stock Ubuntu package repositories.
+
+If you want Nerd Font glyphs later, you can install one manually and swap the font names back.

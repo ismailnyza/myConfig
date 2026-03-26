@@ -10,7 +10,7 @@ sudo apt install -y \
   i3 i3status rofi dunst alacritty neovim \
   feh xclip playerctl brightnessctl scrot thunar \
   network-manager-gnome pavucontrol i3lock \
-  fonts-jetbrains-mono fonts-jetbrains-mono-nerd
+  fonts-jetbrains-mono
 ```
 
 ## Optional but useful
@@ -104,3 +104,15 @@ After copying the config, check these quickly:
 - audio keys work with PipeWire/PulseAudio
 - brightness keys work on your laptop
 - `Super+Shift+L` locks correctly
+
+## Fonts
+
+Default setup uses:
+
+```bash
+fonts-jetbrains-mono
+```
+
+That works cleanly with Ubuntu package repos.
+
+If you want Nerd Font glyphs later, install a Nerd Font manually and then change the font names in the config files.

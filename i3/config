@@ -6,7 +6,7 @@ set $editor alacritty -e nvim
 set $filemanager thunar
 set $lock i3lock
 
-font pango:JetBrainsMono Nerd Font 10
+font pango:JetBrains Mono 10
 floating_modifier $mod
 focus_follows_mouse no
 mouse_warping none

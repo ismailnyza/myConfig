@@ -7,15 +7,15 @@ opacity = 1.0
 size = 11.0
 
 [font.normal]
-family = "JetBrainsMono Nerd Font"
+family = "JetBrains Mono"
 style = "Regular"
 
 [font.bold]
-family = "JetBrainsMono Nerd Font"
+family = "JetBrains Mono"
 style = "Bold"
 
 [font.italic]
-family = "JetBrainsMono Nerd Font"
+family = "JetBrains Mono"
 style = "Italic"
 
 [cursor]
