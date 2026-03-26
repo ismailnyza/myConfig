@@ -16,7 +16,7 @@ sudo apt install -y \
 ## Optional but useful
 
 ```bash
-sudo apt install -y ripgrep fd-find unzip curl git libnotify-bin xss-lock
+sudo apt install -y ripgrep fd-find unzip curl git libnotify-bin xss-lock xdg-utils
 ```
 
 ## Config placement
