@@ -5,7 +5,7 @@ A clean, distraction-minimal Ubuntu setup built around:
 - i3
 - i3status
 - Neovim
-- Ghostty
+- Ghostty or Alacritty
 - Rofi
 - Dunst
 - Zsh + Oh My Zsh
@@ -26,12 +26,14 @@ Keep the machine calm, fast, and predictable.
 - `i3status/config` — simple status bar
 - `rofi/config.rasi` — launcher
 - `dunst/dunstrc` — notifications
-- `ghostty/config` — terminal
+- `ghostty/config` — terminal config
+- `alacritty/alacritty.toml` — fallback terminal config
 - `zsh/.zshrc` — shell config
 - `nvim/init.lua` — Neovim config
 - `scripts/install-dev.sh` — Ubuntu package install
 - `scripts/install-zsh.sh` — Oh My Zsh + shell extras
 - `scripts/apply-config.sh` — copy configs into `~/.config`
+- `scripts/bootstrap.sh` — one-shot Ubuntu setup path
 - `notes/setup.md` — package/install guidance for Ubuntu
 
 ## Included developer experience
@@ -79,11 +81,7 @@ If you want Nerd Font glyphs later, install one manually and swap the font names
 ```bash
 git clone https://github.com/ismailnyza/myConfig ~/myConfig
 cd ~/myConfig
-./scripts/install-dev.sh
-./scripts/install-zsh.sh
-./scripts/apply-config.sh
-exec zsh
-nvim
+./scripts/bootstrap.sh
 ```
 
 Then inside Neovim run:
@@ -93,3 +91,9 @@ Then inside Neovim run:
 :Mason
 :checkhealth
 ```
+
+## Notes
+
+- `bootstrap.sh` runs the install, shell setup, and config apply flow in one shot.
+- The package installer tolerates packages that are missing from your current Ubuntu apt sources.
+- Terminal config is applied for both Ghostty and Alacritty so the laptop can use whichever is available.
