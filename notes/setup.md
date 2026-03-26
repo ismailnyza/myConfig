@@ -9,14 +9,14 @@ sudo apt update
 sudo apt install -y \
   i3 i3status rofi dunst alacritty neovim \
   feh xclip playerctl brightnessctl scrot thunar \
-  network-manager-gnome pavucontrol \
-  fonts-jetbrains-mono
+  network-manager-gnome pavucontrol i3lock \
+  fonts-jetbrains-mono fonts-jetbrains-mono-nerd
 ```
 
 ## Optional but useful
 
 ```bash
-sudo apt install -y ripgrep fd-find unzip curl git
+sudo apt install -y ripgrep fd-find unzip curl git libnotify-bin xss-lock
 ```
 
 ## Config placement
@@ -63,3 +63,44 @@ Put your wallpaper at:
 - Keep `nm-applet` for practical network control
 - Skip `pasystray` to reduce tray clutter
 - Use `i3status` first, not Polybar
+
+## Recommended personal-use extras
+
+These are not mandatory, but they make the setup feel complete for daily use:
+
+```bash
+sudo apt install -y brave-browser
+```
+
+If you use a different browser, update `$browser` in `i3/config`.
+
+## Lock screen
+
+This config binds lock to:
+
+```bash
+Super+Shift+L
+```
+
+Make sure `i3lock` is installed.
+
+## Screenshots
+
+Screenshots are saved to:
+
+```bash
+~/Pictures/screenshots
+```
+
+- `Print` → full screenshot
+- `Super+Print` → selection screenshot
+
+## First-login personal tweaks
+
+After copying the config, check these quickly:
+
+- browser command in `i3/config`
+- wallpaper path (`~/Pictures/wallpaper.png`)
+- audio keys work with PipeWire/PulseAudio
+- brightness keys work on your laptop
+- `Super+Shift+L` locks correctly

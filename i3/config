@@ -16,9 +16,9 @@ for_window [class=".*"] border pixel 2
 hide_edge_borders none
 
 # Autostart
-exec --no-startup-id dunst
-exec --no-startup-id sh -c "[ -f ~/Pictures/wallpaper.png ] && feh --bg-fill ~/Pictures/wallpaper.png"
-exec --no-startup-id nm-applet
+exec_always --no-startup-id pkill -x dunst; dunst
+exec_always --no-startup-id sh -c "[ -f ~/Pictures/wallpaper.png ] && feh --bg-fill ~/Pictures/wallpaper.png"
+exec_always --no-startup-id sh -c "pgrep -x nm-applet >/dev/null || nm-applet"
 
 # Bar
 bar {
@@ -49,6 +49,7 @@ bindsym $mod+Shift+space focus mode_toggle
 bindsym $mod+e exec $filemanager
 bindsym $mod+b exec $browser
 bindsym $mod+n exec $editor
+bindsym $mod+Shift+l exec $lock
 
 # Movement
 bindsym $mod+h focus left
@@ -59,7 +60,7 @@ bindsym $mod+l focus right
 bindsym $mod+Shift+h move left
 bindsym $mod+Shift+j move down
 bindsym $mod+Shift+k move up
-bindsym $mod+Shift+l move right
+# $mod+Shift+l reserved for lock
 
 # Split / layout
 bindsym $mod+v split v
@@ -116,8 +117,8 @@ mode "resize" {
 bindsym $mod+Shift+x mode "resize"
 
 # Screenshots
-bindsym Print exec --no-startup-id sh -c "mkdir -p ~/Pictures/screenshots && scrot ~/Pictures/screenshots/%Y-%m-%d-%T-screenshot.png"
-bindsym $mod+Print exec --no-startup-id sh -c "mkdir -p ~/Pictures/screenshots && scrot -s ~/Pictures/screenshots/%Y-%m-%d-%T-screenshot.png"
+bindsym Print exec --no-startup-id sh -c "mkdir -p ~/Pictures/screenshots && file=~/Pictures/screenshots/$(date +%Y-%m-%d-%H%M%S)-screenshot.png && scrot "$file" && notify-send "Screenshot saved" "$file""
+bindsym $mod+Print exec --no-startup-id sh -c "mkdir -p ~/Pictures/screenshots && file=~/Pictures/screenshots/$(date +%Y-%m-%d-%H%M%S)-selection.png && scrot -s "$file" && notify-send "Screenshot saved" "$file""
 
 # Media / brightness
 bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +5%
@@ -130,3 +131,8 @@ bindsym XF86MonBrightnessDown exec --no-startup-id brightnessctl set 10%-
 for_window [class="Pavucontrol"] floating enable
 for_window [class="Blueman-manager"] floating enable
 for_window [window_role="pop-up"] floating enable
+
+# Better defaults for dialogs
+assign [class="^Brave-browser$"] $ws2
+for_window [class="^Thunar$"] floating disable
+for_window [class="^Nm-connection-editor$"] floating enable

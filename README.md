@@ -37,7 +37,6 @@ Keep the machine calm, fast, and predictable.
 - dunst
 - alacritty
 - feh
-- picom (optional)
 - neovim
 - xclip
 - playerctl
@@ -46,3 +45,23 @@ Keep the machine calm, fast, and predictable.
 ## Goal
 
 A setup that helps you work, not admire the setup.
+
+## Ready for daily use?
+
+Yes — this repo is meant to be a practical personal-use baseline, not a screenshot-flex rice.
+
+What is intentionally included:
+- sane i3 keybinds
+- rofi app launcher
+- dunst notifications
+- terminal + editor defaults
+- screenshot shortcuts
+- network tray
+- simple status bar
+
+What is intentionally excluded:
+- flashy compositor stack by default
+- bar/widget sprawl
+- unnecessary background helpers
+
+You should still expect tiny personal tweaks after a day or two of use — browser choice, wallpaper, font size, maybe one or two keybinds.
