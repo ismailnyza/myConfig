@@ -98,6 +98,7 @@ require("lazy").setup({
     config = function()
       require("mason-lspconfig").setup({
         ensure_installed = { "gopls", "lua_ls", "bashls", "ts_ls", "jsonls", "html", "cssls" },
+        automatic_enable = false,
       })
     end,
   },
@@ -135,6 +136,16 @@ require("lazy").setup({
       local capabilities = require("cmp_nvim_lsp").default_capabilities()
       local lspconfig = require("lspconfig")
 
+      local function setup(server, opts)
+        opts = opts or {}
+        if vim.fn.has("nvim-0.11") == 1 and vim.lsp and vim.lsp.config then
+          vim.lsp.config(server, opts)
+          vim.lsp.enable(server)
+        else
+          lspconfig[server].setup(opts)
+        end
+      end
+
       local on_attach = function(_, bufnr)
         local opts = { buffer = bufnr }
         vim.keymap.set("n", "gd", vim.lsp.buf.definition, vim.tbl_extend("force", opts, { desc = "Go to definition" }))
@@ -146,7 +157,7 @@ require("lazy").setup({
         vim.keymap.set("n", "<leader>f", function() vim.lsp.buf.format({ async = false }) end, vim.tbl_extend("force", opts, { desc = "Format" }))
       end
 
-      lspconfig.gopls.setup({
+      setup("gopls", {
         capabilities = capabilities,
         on_attach = on_attach,
         settings = {
@@ -158,12 +169,12 @@ require("lazy").setup({
         },
       })
 
-      lspconfig.ts_ls.setup({ capabilities = capabilities, on_attach = on_attach })
-      lspconfig.bashls.setup({ capabilities = capabilities, on_attach = on_attach })
-      lspconfig.jsonls.setup({ capabilities = capabilities, on_attach = on_attach })
-      lspconfig.html.setup({ capabilities = capabilities, on_attach = on_attach })
-      lspconfig.cssls.setup({ capabilities = capabilities, on_attach = on_attach })
-      lspconfig.lua_ls.setup({
+      setup("ts_ls", { capabilities = capabilities, on_attach = on_attach })
+      setup("bashls", { capabilities = capabilities, on_attach = on_attach })
+      setup("jsonls", { capabilities = capabilities, on_attach = on_attach })
+      setup("html", { capabilities = capabilities, on_attach = on_attach })
+      setup("cssls", { capabilities = capabilities, on_attach = on_attach })
+      setup("lua_ls", {
         capabilities = capabilities,
         on_attach = on_attach,
         settings = {

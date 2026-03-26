@@ -15,6 +15,7 @@ plugins=(
   command-not-found
   zsh-autosuggestions
   zsh-syntax-highlighting
+  zsh-history-substring-search
 )
 
 source "$ZSH/oh-my-zsh.sh"
