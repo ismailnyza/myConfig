@@ -95,7 +95,23 @@ require("lazy").setup({
     "stevearc/oil.nvim",
     dependencies = { "nvim-tree/nvim-web-devicons" },
     config = function()
-      require("oil").setup()
+      require("oil").setup({
+        default_file_explorer = true,
+        columns = { "icon" },
+        view_options = {
+          show_hidden = true,
+          is_always_hidden = function(name, _)
+            return name == ".git"
+          end,
+        },
+        keymaps = {
+          ["<CR>"] = "actions.select",
+          ["-"] = "actions.parent",
+          ["<BS>"] = "actions.parent",
+          ["q"] = "actions.close",
+        },
+        use_default_keymaps = true,
+      })
     end,
   },
   {
