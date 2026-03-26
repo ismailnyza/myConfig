@@ -39,7 +39,7 @@ vim.opt.completeopt = { "menu", "menuone", "noselect" }
 vim.opt.cursorline = true
 vim.opt.pumheight = 12
 
-vim.keymap.set("n", "<leader>n", "<cmd>Oil<CR>", { desc = "Project file explorer" })
+vim.keymap.set("n", "<leader>n", "<cmd>Neotree toggle reveal filesystem left<CR>", { desc = "Project file explorer" })
 vim.keymap.set("n", "<leader>ff", "<cmd>Telescope find_files hidden=true<CR>", { desc = "Find files" })
 vim.keymap.set("n", "<leader>fg", "<cmd>Telescope live_grep<CR>", { desc = "Live grep" })
 vim.keymap.set("n", "<leader>fb", "<cmd>Telescope buffers<CR>", { desc = "Buffers" })
@@ -92,25 +92,43 @@ require("lazy").setup({
     end,
   },
   {
-    "stevearc/oil.nvim",
-    dependencies = { "nvim-tree/nvim-web-devicons" },
+    "nvim-neo-tree/neo-tree.nvim",
+    branch = "v3.x",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      "nvim-tree/nvim-web-devicons",
+      "MunifTanjim/nui.nvim",
+    },
     config = function()
-      require("oil").setup({
-        default_file_explorer = true,
-        columns = { "icon" },
-        view_options = {
-          show_hidden = true,
-          is_always_hidden = function(name, _)
-            return name == ".git"
-          end,
+      require("neo-tree").setup({
+        close_if_last_window = true,
+        popup_border_style = "rounded",
+        enable_git_status = true,
+        enable_diagnostics = true,
+        filesystem = {
+          hijack_netrw_behavior = "open_default",
+          filtered_items = {
+            visible = true,
+            hide_dotfiles = false,
+            hide_gitignored = false,
+          },
+          follow_current_file = {
+            enabled = true,
+          },
+          use_libuv_file_watcher = true,
+          window = {
+            mappings = {
+              ["l"] = "open",
+              ["<Right>"] = "open",
+              ["h"] = "close_node",
+              ["<Left>"] = "close_node",
+              ["<CR>"] = "open",
+            },
+          },
         },
-        keymaps = {
-          ["<CR>"] = "actions.select",
-          ["-"] = "actions.parent",
-          ["<BS>"] = "actions.parent",
-          ["q"] = "actions.close",
+        window = {
+          width = 34,
         },
-        use_default_keymaps = true,
       })
     end,
   },

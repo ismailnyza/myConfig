@@ -93,7 +93,7 @@ If you want Telegram integrations inside Neovim later, that is a separate layer 
 If icons show as empty squares or boxes, install a Nerd Font and point Alacritty at it. Example font name used by this repo:
 
 ```bash
-JetBrainsMono Nerd Font
+JetBrainsMono Nerd Font Mono
 ```
 
 Then refresh font cache and reopen Alacritty:
