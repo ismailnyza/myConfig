@@ -100,9 +100,16 @@ require("lazy").setup({
   },
   {
     "nvim-treesitter/nvim-treesitter",
-    build = ":TSUpdate",
     config = function()
-      require("nvim-treesitter.configs").setup({
+      local ok, ts_configs = pcall(require, "nvim-treesitter.configs")
+      if not ok then
+        vim.schedule(function()
+          vim.notify("nvim-treesitter not ready yet; run :Lazy! sync and restart nvim", vim.log.levels.WARN)
+        end)
+        return
+      end
+
+      ts_configs.setup({
         ensure_installed = { "go", "gomod", "gosum", "lua", "vim", "bash", "markdown", "javascript", "typescript", "tsx", "json", "html", "css" },
         highlight = { enable = true },
         indent = { enable = true },
@@ -274,7 +281,6 @@ require("lazy").setup({
           null_ls.builtins.formatting.gofmt,
           null_ls.builtins.formatting.goimports,
           null_ls.builtins.formatting.prettier,
-          null_ls.builtins.diagnostics.eslint_d,
         },
       })
 
