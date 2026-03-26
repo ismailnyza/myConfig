@@ -7,7 +7,7 @@ Install these first:
 ```bash
 sudo apt update
 sudo apt install -y \
-  i3 i3status rofi dunst alacritty neovim \
+  i3 i3status rofi dunst ghostty neovim \
   feh xclip playerctl brightnessctl scrot thunar \
   network-manager-gnome pavucontrol i3lock \
   fonts-jetbrains-mono \
@@ -90,13 +90,13 @@ If you want Telegram integrations inside Neovim later, that is a separate layer 
 
 ## Icons in Neovim
 
-If icons show as empty squares or boxes, install a Nerd Font and point Alacritty at it. Example font name used by this repo:
+If icons show as empty squares or boxes, install a Nerd Font and point Ghostty at it. Example font name used by this repo:
 
 ```bash
 JetBrainsMono Nerd Font Mono
 ```
 
-Then refresh font cache and reopen Alacritty:
+Then refresh font cache and reopen Ghostty:
 
 ```bash
 fc-cache -fv

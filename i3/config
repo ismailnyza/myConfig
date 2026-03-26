@@ -1,8 +1,8 @@
 set $mod Mod4
-set $terminal alacritty
+set $terminal ghostty
 set $launcher rofi -show drun
 set $browser sh -c "command -v brave-browser >/dev/null && exec brave-browser || exec xdg-open https://google.com"
-set $editor alacritty -e nvim
+set $editor ghostty -e nvim
 set $filemanager thunar
 set $lock i3lock
 

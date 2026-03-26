@@ -5,7 +5,7 @@ A clean, distraction-minimal Ubuntu setup built around:
 - i3
 - i3status
 - Neovim
-- Alacritty
+- Ghostty
 - Rofi
 - Dunst
 - Zsh + Oh My Zsh
@@ -26,7 +26,7 @@ Keep the machine calm, fast, and predictable.
 - `i3status/config` — simple status bar
 - `rofi/config.rasi` — launcher
 - `dunst/dunstrc` — notifications
-- `alacritty/alacritty.toml` — terminal
+- `ghostty/config` — terminal
 - `zsh/.zshrc` — shell config
 - `nvim/init.lua` — Neovim config
 - `scripts/install-dev.sh` — Ubuntu package install

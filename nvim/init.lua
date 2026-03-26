@@ -39,7 +39,7 @@ vim.opt.completeopt = { "menu", "menuone", "noselect" }
 vim.opt.cursorline = true
 vim.opt.pumheight = 12
 
-vim.keymap.set("n", "<leader>n", "<cmd>Neotree toggle reveal filesystem left<CR>", { desc = "Project file explorer" })
+vim.keymap.set("n", "<leader>n", "<cmd>Neotree toggle reveal filesystem right<CR>", { desc = "Project file explorer" })
 vim.keymap.set("n", "<leader>ff", "<cmd>Telescope find_files hidden=true<CR>", { desc = "Find files" })
 vim.keymap.set("n", "<leader>fg", "<cmd>Telescope live_grep<CR>", { desc = "Live grep" })
 vim.keymap.set("n", "<leader>fb", "<cmd>Telescope buffers<CR>", { desc = "Buffers" })
@@ -122,11 +122,13 @@ require("lazy").setup({
               ["<Right>"] = "open",
               ["h"] = "close_node",
               ["<Left>"] = "close_node",
+              ["P"] = { "focus_preview" },
               ["<CR>"] = "open",
             },
           },
         },
         window = {
+          position = "right",
           width = 34,
         },
       })
