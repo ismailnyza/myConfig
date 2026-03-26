@@ -1,288 +1,176 @@
------------------------------------------------------------
--- Leader
------------------------------------------------------------
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
------------------------------------------------------------
--- Bootstrap lazy.nvim
------------------------------------------------------------
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.uv.fs_stat(lazypath) then
   vim.fn.system({
-    "git", "clone", "--filter=blob:none",
+    "git",
+    "clone",
+    "--filter=blob:none",
     "https://github.com/folke/lazy.nvim.git",
-    "--branch=stable", lazypath,
+    "--branch=stable",
+    lazypath,
   })
 end
 vim.opt.rtp:prepend(lazypath)
 
------------------------------------------------------------
--- General Options
------------------------------------------------------------
 vim.opt.number = true
 vim.opt.relativenumber = true
 vim.opt.scrolloff = 8
 vim.opt.termguicolors = true
-vim.opt.laststatus = 3
-vim.opt.showmode = false
+vim.opt.signcolumn = "yes"
 vim.opt.clipboard = "unnamedplus"
 vim.opt.tabstop = 4
 vim.opt.shiftwidth = 4
 vim.opt.expandtab = true
 vim.opt.smartindent = true
-vim.opt.swapfile = false
 vim.opt.ignorecase = true
 vim.opt.smartcase = true
 vim.opt.wrap = false
+vim.opt.swapfile = false
+vim.opt.backup = false
+vim.opt.writebackup = false
 vim.opt.mouse = "a"
+vim.opt.updatetime = 250
+vim.opt.splitright = true
+vim.opt.splitbelow = true
+vim.opt.completeopt = { "menu", "menuone", "noselect" }
 
--- Treesitter folding (12)
-vim.opt.foldmethod = "expr"
-vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
-vim.opt.foldlevel = 99
+vim.keymap.set("n", "<leader>ff", "<cmd>Telescope find_files<CR>", { desc = "Find files" })
+vim.keymap.set("n", "<leader>fg", "<cmd>Telescope live_grep<CR>", { desc = "Live grep" })
+vim.keymap.set("n", "<leader>fb", "<cmd>Telescope buffers<CR>", { desc = "Buffers" })
+vim.keymap.set("n", "<leader>e", "<cmd>Oil<CR>", { desc = "File explorer" })
+vim.keymap.set("n", "<leader>w", "<cmd>w<CR>", { desc = "Write" })
+vim.keymap.set("n", "<leader>q", "<cmd>q<CR>", { desc = "Quit" })
+vim.keymap.set("n", "<leader>h", "<cmd>nohlsearch<CR>", { desc = "Clear search highlight" })
+vim.keymap.set("n", "gd", vim.lsp.buf.definition, { desc = "Go to definition" })
+vim.keymap.set("n", "gr", vim.lsp.buf.references, { desc = "References" })
+vim.keymap.set("n", "K", vim.lsp.buf.hover, { desc = "Hover" })
+vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, { desc = "Rename" })
+vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, { desc = "Code action" })
 
------------------------------------------------------------
--- Keymaps (general)
------------------------------------------------------------
-vim.keymap.set("n", "<leader>tt", "<cmd>ToggleTerm<CR>", { desc = "Toggle Terminal" })
-vim.keymap.set("n", "<leader>n", "<cmd>NvimTreeToggle<CR>", { desc = "Explorer" })
-
------------------------------------------------------------
--- Plugins
------------------------------------------------------------
 require("lazy").setup({
-
------------------------------------------------------------
--- Theme
------------------------------------------------------------
-{
-  "rebelot/kanagawa.nvim",
-  priority = 1000,
-  config = function()
-    require("kanagawa").setup({ dimInactive = true })
-    vim.cmd.colorscheme("kanagawa-dragon")
-  end,
-},
-
------------------------------------------------------------
--- Notify (10)
------------------------------------------------------------
-{
-  "rcarriga/nvim-notify",
-  config = function()
-    local notify = require("notify")
-    notify.setup({ stages = "fade", timeout = 3000 })
-    vim.notify = notify
-  end,
-},
-
------------------------------------------------------------
--- Noice
------------------------------------------------------------
-{
-  "folke/noice.nvim",
-  event = "VeryLazy",
-  dependencies = { "MunifTanjim/nui.nvim", "rcarriga/nvim-notify" },
-  config = function()
-    require("noice").setup({
-      lsp = { override = { ["cmp.entry.get_documentation"] = true } },
-      presets = { bottom_search = true, command_palette = true },
-    })
-  end,
-},
-
------------------------------------------------------------
--- Statusline
------------------------------------------------------------
-{
-  "nvim-lualine/lualine.nvim",
-  config = function()
-    require("lualine").setup({ options = { globalstatus = true } })
-  end,
-},
-
------------------------------------------------------------
--- File Explorer
------------------------------------------------------------
-{
-  "nvim-tree/nvim-tree.lua",
-  dependencies = { "nvim-tree/nvim-web-devicons" },
-  config = function()
-    require("nvim-tree").setup({})
-  end,
-},
-
------------------------------------------------------------
--- Telescope
------------------------------------------------------------
-{
-  "nvim-telescope/telescope.nvim",
-  dependencies = {
-    "nvim-lua/plenary.nvim",
-    "nvim-telescope/telescope-fzf-native.nvim",
+  {
+    "rebelot/kanagawa.nvim",
+    priority = 1000,
+    config = function()
+      vim.cmd.colorscheme("kanagawa-dragon")
+    end,
   },
-  config = function()
-    local t = require("telescope")
-    t.setup({
-      defaults = {
-        layout_config = { prompt_position = "top" },
-        sorting_strategy = "ascending",
-      },
-    })
-    t.load_extension("fzf")
-  end,
-},
-
------------------------------------------------------------
--- Spectre (9)
------------------------------------------------------------
-{
-  "nvim-pack/nvim-spectre",
-  dependencies = { "nvim-lua/plenary.nvim" },
-  keys = {
-    { "<leader>sr", function() require("spectre").open() end, desc = "Search & Replace" },
-    { "<leader>sw", function() require("spectre").open_visual({ select_word = true }) end, desc = "Replace Word" },
+  {
+    "nvim-telescope/telescope.nvim",
+    dependencies = { "nvim-lua/plenary.nvim" },
+    config = function()
+      require("telescope").setup({
+        defaults = {
+          sorting_strategy = "ascending",
+          layout_config = { prompt_position = "top" },
+        },
+      })
+    end,
   },
-},
-
------------------------------------------------------------
--- Treesitter
------------------------------------------------------------
-{
-  "nvim-treesitter/nvim-treesitter",
-  build = ":TSUpdate",
-  config = function()
-    require("nvim-treesitter.configs").setup({
-      ensure_installed = { "go", "lua", "php", "markdown" },
-      highlight = { enable = true, additional_vim_regex_highlighting = false },
-      indent = { enable = true },
-    })
-  end,
-},
-
------------------------------------------------------------
--- LSP
------------------------------------------------------------
-{
-  "neovim/nvim-lspconfig",
-  dependencies = {
+  {
+    "stevearc/oil.nvim",
+    dependencies = { "nvim-tree/nvim-web-devicons" },
+    config = function()
+      require("oil").setup()
+    end,
+  },
+  {
+    "nvim-treesitter/nvim-treesitter",
+    build = ":TSUpdate",
+    config = function()
+      require("nvim-treesitter.configs").setup({
+        ensure_installed = { "go", "lua", "vim", "bash", "markdown" },
+        highlight = { enable = true },
+        indent = { enable = true },
+      })
+    end,
+  },
+  {
     "williamboman/mason.nvim",
+    config = function()
+      require("mason").setup()
+    end,
+  },
+  {
     "williamboman/mason-lspconfig.nvim",
-    "hrsh7th/cmp-nvim-lsp",
+    dependencies = { "williamboman/mason.nvim", "neovim/nvim-lspconfig" },
+    config = function()
+      require("mason-lspconfig").setup({
+        ensure_installed = { "gopls", "lua_ls", "bashls" },
+      })
+    end,
   },
-  config = function()
-    require("mason").setup()
-    require("mason-lspconfig").setup({
-      ensure_installed = { "gopls", "lua_ls", "intelephense" },
-    })
+  {
+    "neovim/nvim-lspconfig",
+    dependencies = { "hrsh7th/cmp-nvim-lsp" },
+    config = function()
+      local capabilities = require("cmp_nvim_lsp").default_capabilities()
+      local lspconfig = require("lspconfig")
 
-    local lsp = require("lspconfig")
-    local caps = require("cmp_nvim_lsp").default_capabilities()
-
-    local on_attach = function(_, bufnr)
-      local map = function(k, v, d)
-        vim.keymap.set("n", k, v, { buffer = bufnr, desc = d })
-      end
-      map("gd", require("telescope.builtin").lsp_definitions, "Definition")
-      map("gr", require("telescope.builtin").lsp_references, "References")
-      map("K", vim.lsp.buf.hover, "Hover")
-    end
-
-    lsp.gopls.setup({ on_attach = on_attach, capabilities = caps })
-    lsp.lua_ls.setup({
-      on_attach = on_attach,
-      capabilities = caps,
-      settings = { Lua = { diagnostics = { globals = { "vim" } } } },
-    })
-    lsp.intelephense.setup({ on_attach = on_attach, capabilities = caps })
-  end,
-},
-
------------------------------------------------------------
--- Completion
------------------------------------------------------------
-{
-  "hrsh7th/nvim-cmp",
-  dependencies = {
-    "hrsh7th/cmp-nvim-lsp",
-    "L3MON4D3/LuaSnip",
+      lspconfig.gopls.setup({ capabilities = capabilities })
+      lspconfig.bashls.setup({ capabilities = capabilities })
+      lspconfig.lua_ls.setup({
+        capabilities = capabilities,
+        settings = {
+          Lua = {
+            diagnostics = { globals = { "vim" } },
+          },
+        },
+      })
+    end,
   },
-  config = function()
-    local cmp = require("cmp")
-    cmp.setup({
-      mapping = cmp.mapping.preset.insert({
-        ["<CR>"] = cmp.mapping.confirm({ select = true }),
-      }),
-      sources = { { name = "nvim_lsp" } },
-    })
-  end,
-},
-
------------------------------------------------------------
--- none-ls (deterministic formatting fix)
------------------------------------------------------------
-{
-  "nvimtools/none-ls.nvim",
-  dependencies = { "nvim-lua/plenary.nvim" },
-  config = function()
-    local nls = require("null-ls")
-    nls.setup({
-      sources = {
-        nls.builtins.formatting.gofmt,
-        nls.builtins.formatting.goimports,
-      },
-      on_attach = function(client, bufnr)
-        if client.name == "null-ls" then
-          vim.api.nvim_create_autocmd("BufWritePre", {
-            buffer = bufnr,
-            callback = function()
-              vim.lsp.buf.format({
-                bufnr = bufnr,
-                filter = function(c) return c.name == "null-ls" end,
-              })
-            end,
-          })
-        end
-      end,
-    })
-  end,
-},
-
------------------------------------------------------------
--- Neotest (fixed keymaps)
------------------------------------------------------------
-{
-  "nvim-neotest/neotest",
-  dependencies = {
-    "nvim-lua/plenary.nvim",
-    "nvim-neotest/neotest-go",
+  {
+    "hrsh7th/nvim-cmp",
+    dependencies = {
+      "hrsh7th/cmp-nvim-lsp",
+      "L3MON4D3/LuaSnip",
+      "saadparwaiz1/cmp_luasnip",
+    },
+    config = function()
+      local cmp = require("cmp")
+      cmp.setup({
+        snippet = {
+          expand = function(args)
+            require("luasnip").lsp_expand(args.body)
+          end,
+        },
+        mapping = cmp.mapping.preset.insert({
+          ["<CR>"] = cmp.mapping.confirm({ select = true }),
+          ["<Tab>"] = cmp.mapping.select_next_item(),
+          ["<S-Tab>"] = cmp.mapping.select_prev_item(),
+        }),
+        sources = {
+          { name = "nvim_lsp" },
+          { name = "luasnip" },
+        },
+      })
+    end,
   },
-  config = function()
-    require("neotest").setup({
-      adapters = { require("neotest-go") },
-    })
-  end,
-  keys = {
-    { "<leader>tf", function() require("neotest").run.run(vim.fn.expand("%")) end, desc = "Test File" },
-    { "<leader>tn", function() require("neotest").run.run() end, desc = "Test Nearest" },
-    { "<leader>tA", function() require("neotest").run.run(vim.loop.cwd()) end, desc = "Test All" },
+  {
+    "nvimtools/none-ls.nvim",
+    dependencies = { "nvim-lua/plenary.nvim" },
+    config = function()
+      local null_ls = require("null-ls")
+      null_ls.setup({
+        sources = {
+          null_ls.builtins.formatting.stylua,
+          null_ls.builtins.formatting.gofmt,
+          null_ls.builtins.formatting.goimports,
+        },
+      })
+
+      vim.api.nvim_create_autocmd("BufWritePre", {
+        callback = function(args)
+          local ft = vim.bo[args.buf].filetype
+          if ft == "go" or ft == "lua" then
+            vim.lsp.buf.format({ bufnr = args.buf, async = false })
+          end
+        end,
+      })
+    end,
   },
-},
-
------------------------------------------------------------
--- ToggleTerm
------------------------------------------------------------
-{
-  "akinsho/toggleterm.nvim",
-  config = function()
-    require("toggleterm").setup({
-      direction = "horizontal",
-      size = 15,
-    })
-  end,
-},
-
 }, {
-  checker = { enabled = true },
+  checker = { enabled = false },
 })

@@ -1,0 +1,54 @@
+configuration {
+  modi: "drun,run,window";
+  show-icons: true;
+  font: "JetBrainsMono Nerd Font 11";
+  lines: 10;
+  columns: 1;
+  disable-history: false;
+  case-sensitive: false;
+  cycle: true;
+}
+
+* {
+  bg: #1e1e2e;
+  bg-alt: #313244;
+  fg: #cdd6f4;
+  selected: #cba6f7;
+  urgent: #f38ba8;
+  border: #45475a;
+}
+
+window {
+  width: 32%;
+  border: 2px;
+  border-color: @border;
+  background-color: @bg;
+}
+
+mainbox {
+  background-color: @bg;
+}
+
+inputbar {
+  children: [prompt, entry];
+  background-color: @bg-alt;
+  padding: 10px;
+}
+
+listview {
+  lines: 10;
+  background-color: @bg;
+  spacing: 4px;
+  padding: 8px;
+}
+
+element {
+  padding: 8px;
+  background-color: @bg;
+  text-color: @fg;
+}
+
+element selected {
+  background-color: @selected;
+  text-color: #11111b;
+}
