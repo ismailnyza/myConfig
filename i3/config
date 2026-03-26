@@ -117,8 +117,8 @@ mode "resize" {
 bindsym $mod+Shift+x mode "resize"
 
 # Screenshots
-bindsym Print exec --no-startup-id sh -c 'mkdir -p ~/Pictures/screenshots && file=~/Pictures/screenshots/$(date +%Y-%m-%d-%H%M%S)-screenshot.png && scrot "$file" && notify-send "Screenshot saved" "$file"'
-bindsym $mod+Print exec --no-startup-id sh -c 'mkdir -p ~/Pictures/screenshots && file=~/Pictures/screenshots/$(date +%Y-%m-%d-%H%M%S)-selection.png && scrot -s "$file" && notify-send "Screenshot saved" "$file"'
+bindsym Print exec --no-startup-id sh -c 'mkdir -p ~/Pictures/screenshots && file=~/Pictures/screenshots/$(date +%Y-%m-%d-%H%M%S)-screenshot.png && scrot "$file" && xclip -selection clipboard -t image/png -i "$file" && notify-send "Screenshot copied" "Saved to $file and copied to clipboard"'
+bindsym $mod+Print exec --no-startup-id sh -c 'mkdir -p ~/Pictures/screenshots && file=~/Pictures/screenshots/$(date +%Y-%m-%d-%H%M%S)-selection.png && scrot -s "$file" && xclip -selection clipboard -t image/png -i "$file" && notify-send "Selection copied" "Saved to $file and copied to clipboard"'
 
 # Media / brightness
 bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +5%
