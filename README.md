@@ -79,7 +79,7 @@ If you want Nerd Font glyphs later, install one manually and swap the font names
 ## Quick start
 
 ```bash
-git clone https://github.com/ismailnyza/myConfig ~/myConfig
+git clone git@github.com:ismailnyza/myConfig.git ~/myConfig
 cd ~/myConfig
 ./scripts/bootstrap.sh
 ```
